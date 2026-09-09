@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #FFFDFB;
+  --foreground: #2A121A;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-caveat: 'Caveat', cursive;
+  --font-script: 'Dancing Script', cursive;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  selection-background-color: #FF758F;
+  selection-color: #FFFFFF;
+}
+
+::selection {
+  background: #FFB3C1;
+  color: #3D0C1A;
+}
+
+/* Custom romantic typography classes */
+.font-serif-luxury {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-playfair-luxury {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-handwriting {
+  font-family: 'Caveat', cursive;
+}
+
+.font-script-luxury {
+  font-family: 'Dancing Script', cursive;
+}
+
+/* Soft glassmorphism */
+.glass-nav {
+  background: rgba(255, 253, 250, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 182, 193, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(226, 88, 117, 0.08);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 200, 210, 0.35);
+  box-shadow: 0 10px 30px -5px rgba(220, 100, 130, 0.07);
+}
+
+.glass-card-dark {
+  background: rgba(24, 10, 18, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 180, 200, 0.15);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+.polaroid-shadow {
+  box-shadow: 0 12px 30px -8px rgba(90, 20, 40, 0.12), 0 4px 12px -2px rgba(90, 20, 40, 0.06);
+}
+
+.polaroid-shadow-hover {
+  box-shadow: 0 20px 40px -10px rgba(90, 20, 40, 0.2), 0 8px 16px -2px rgba(90, 20, 40, 0.1);
+}
+
+/* Smooth custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFDFB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFCAD4;
+  border-radius: 9999px;
+  border: 2px solid #FFFDFB;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF758F;
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 117, 143, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(255, 117, 143, 0.8), 0 0 50px rgba(255, 182, 193, 0.5);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Custom cursor hide default on desktop when cursor enabled */
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor {
+    cursor: none;
+  }
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor input,
+  body.has-custom-cursor [role="button"] {
+    cursor: none;
+  }
+}
