@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getImageKitAuthParams } from "@/lib/imagekit";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const authenticationParameters = getImageKitAuthParams();

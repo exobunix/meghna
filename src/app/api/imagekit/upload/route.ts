@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import imagekit from "@/lib/imagekit";
+import { getImageKit } from "@/lib/imagekit";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +17,8 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const uploadResponse = await imagekit.upload({
+    const ik = getImageKit();
+    const uploadResponse = await ik.upload({
       file: buffer,
       fileName: fileName,
       folder: folder,

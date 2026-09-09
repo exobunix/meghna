@@ -8,38 +8,38 @@ try {
   // safe fallback
 }
 
-const uri = process.env.MONGODB_URI || "";
-const options = {};
+const DEFAULT_URI = "mongodb+srv://adarshdeepsachan_db_user:ZQSLTnz6pIodZee5@lvpu.5obyzgi.mongodb.net/meghna?retryWrites=true&w=majority&appName=lvpu";
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+let client: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
 
 declare global {
   // eslint-disable-next-line no-var
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if (!uri) {
-  console.warn("⚠️ MONGODB_URI is not defined in environment variables.");
-}
+export function getMongoClientPromise(): Promise<MongoClient> {
+  const uri = process.env.MONGODB_URI || DEFAULT_URI;
 
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the client
-  // is preserved across module reloads caused by HMR.
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+  if (process.env.NODE_ENV === "development") {
+    if (!global._mongoClientPromise) {
+      client = new MongoClient(uri);
+      global._mongoClientPromise = client.connect();
+    }
+    return global._mongoClientPromise;
   }
-  clientPromise = global._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
+
+  if (!clientPromise) {
+    client = new MongoClient(uri);
+    clientPromise = client.connect();
+  }
+  return clientPromise;
 }
 
-export default clientPromise;
+export default getMongoClientPromise;
 
 export async function getDatabase(dbName = process.env.MONGODB_DB || "meghna") {
-  const client = await clientPromise;
-  return client.db(dbName);
+  const promise = getMongoClientPromise();
+  const connectedClient = await promise;
+  return connectedClient.db(dbName);
 }

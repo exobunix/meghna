@@ -1,18 +1,32 @@
 import ImageKit from "imagekit";
 
-const imagekit = new ImageKit({
-  publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY || "",
-  urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "",
-});
+const DEFAULT_PUBLIC_KEY = "public_uzSklsoDFlGNoIPGFtTdcYJU32Y=";
+const DEFAULT_PRIVATE_KEY = "private_Zgjm0jSmxe2S76y3kkULZ5nzEvo=";
+const DEFAULT_URL_ENDPOINT = "https://ik.imagekit.io/avdarinn";
 
-export default imagekit;
+let imagekitInstance: ImageKit | null = null;
+
+export function getImageKit(): ImageKit {
+  if (!imagekitInstance) {
+    const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || DEFAULT_PUBLIC_KEY;
+    const privateKey = process.env.IMAGEKIT_PRIVATE_KEY || DEFAULT_PRIVATE_KEY;
+    const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT;
+
+    imagekitInstance = new ImageKit({
+      publicKey,
+      privateKey,
+      urlEndpoint,
+    });
+  }
+  return imagekitInstance;
+}
 
 /**
  * Returns client-side authentication parameters required by ImageKit front-end SDKs
  */
 export function getImageKitAuthParams() {
-  return imagekit.getAuthenticationParameters();
+  const ik = getImageKit();
+  return ik.getAuthenticationParameters();
 }
 
 /**
@@ -24,7 +38,7 @@ export function buildImageUrl(path: string, options?: { width?: number; height?:
     return path;
   }
 
-  const endpoint = (process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || "https://ik.imagekit.io/avdarinn").replace(/\/$/, "");
+  const endpoint = (process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT).replace(/\/$/, "");
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
 
   const tr: string[] = [];
@@ -38,3 +52,5 @@ export function buildImageUrl(path: string, options?: { width?: number; height?:
   }
   return `${endpoint}${cleanPath}`;
 }
+
+export default getImageKit;
