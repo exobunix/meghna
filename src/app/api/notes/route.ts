@@ -3,6 +3,15 @@ import { getDatabase } from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
+const CUTE_NOTE_PHOTOS = [
+  "/images/meghna/Image-30109.jpg",
+  "/images/meghna/Image-44415.jpg",
+  "/images/meghna/Image-16162.jpg",
+  "/images/meghna/Image-76778.jpg",
+  "/images/meghna/Image-54970.jpg",
+  "/images/meghna/Image-724.jpg",
+];
+
 const DEFAULT_NOTES = [
   {
     sender: "Adarsh",
@@ -16,7 +25,7 @@ const DEFAULT_NOTES = [
     sender: "Forever Yours",
     message: "Fourteen days of laughter, inside jokes, and realizing my favorite place is wherever you are. ✨",
     tag: "Romantic",
-    imageUrl: "",
+    imageUrl: "/images/meghna/Image-44415.jpg",
     createdAt: new Date(Date.now() - 86400000).toISOString(),
     likes: 21,
   },
@@ -35,10 +44,28 @@ export async function GET() {
     const db = await getDatabase();
     const collection = db.collection("notes");
 
-    // Automatically update any stale broken polaroid1.jpg references in database
+    // Automatically update any notes with empty or broken imageUrl in database
     await collection.updateMany(
-      { imageUrl: { $regex: "polaroid1\\.jpg" } },
+      {
+        $or: [
+          { imageUrl: "" },
+          { imageUrl: { $exists: false } },
+          { imageUrl: null },
+          { imageUrl: { $regex: "polaroid1\\.jpg" } },
+        ],
+      },
+      { $set: { imageUrl: "/images/meghna/Image-44415.jpg" } }
+    ).catch(() => {});
+
+    // Ensure Note 1 specifically has Image-30109.jpg and Note 2 has Image-44415.jpg
+    await collection.updateOne(
+      { sender: "Adarsh", tag: "Heartfelt" },
       { $set: { imageUrl: "/images/meghna/Image-30109.jpg" } }
+    ).catch(() => {});
+
+    await collection.updateOne(
+      { sender: "Forever Yours" },
+      { $set: { imageUrl: "/images/meghna/Image-44415.jpg" } }
     ).catch(() => {});
 
     let notes = await collection.find({}).sort({ createdAt: -1 }).limit(50).toArray();
@@ -56,17 +83,15 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      notes: notes.map((n) => ({
+      notes: notes.map((n, idx) => ({
         id: n._id.toString(),
         sender: n.sender,
         message: n.message,
         tag: n.tag || "Love",
         imageUrl:
-          n.imageUrl && !n.imageUrl.includes("polaroid1.jpg")
+          n.imageUrl && !n.imageUrl.includes("polaroid1.jpg") && n.imageUrl.trim() !== ""
             ? n.imageUrl
-            : n.sender === "Adarsh"
-            ? "/images/meghna/Image-30109.jpg"
-            : n.imageUrl || "",
+            : CUTE_NOTE_PHOTOS[idx % CUTE_NOTE_PHOTOS.length],
         createdAt: n.createdAt,
         likes: n.likes || 0,
       })),

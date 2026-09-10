@@ -32,7 +32,6 @@ export default function HeroHeart3D() {
   const [floatingHearts, setFloatingHearts] = useState<FloatingLove[]>([]);
   const [isBeating, setIsBeating] = useState(false);
 
-  // Trigger heart pulse and floating love elements
   const handleHeartTap = () => {
     sounds.playHeartChime();
     setTapCount((prev) => prev + 1);
@@ -67,6 +66,9 @@ export default function HeroHeart3D() {
     }, 1800);
   };
 
+  const handleHeartTapRef = useRef(handleHeartTap);
+  handleHeartTapRef.current = handleHeartTap;
+
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
@@ -86,6 +88,11 @@ export default function HeroHeart3D() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
+    renderer.domElement.style.cursor = "pointer";
+    const onCanvasTap = () => {
+      handleHeartTapRef.current();
+    };
+    renderer.domElement.addEventListener("pointerdown", onCanvasTap);
     container.appendChild(renderer.domElement);
 
     // Create 3D Heart Geometry using Three.js Shape
@@ -253,6 +260,7 @@ export default function HeroHeart3D() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animId);
+      renderer.domElement.removeEventListener("pointerdown", onCanvasTap);
       if (container && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }

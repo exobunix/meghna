@@ -144,7 +144,7 @@ export default function LoveNotesWall() {
   };
 
   return (
-    <section id="notes" className="relative py-28 px-4 bg-gradient-to-b from-[#FFFDFB] via-[#FFF0F4] to-[#FFF8F8] overflow-hidden">
+    <section id="notes" className="relative scroll-mt-28 pt-36 pb-28 md:pt-40 md:pb-36 px-4 bg-gradient-to-b from-[#FFFDFB] via-[#FFF0F4] to-[#FFF8F8] overflow-hidden">
       {/* Background ambient orbs */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF758F]/15 via-[#FFB3C1]/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
 
@@ -240,30 +240,36 @@ export default function LoveNotesWall() {
                     “{note.message}”
                   </p>
 
-                  {/* Optional ImageKit Photo: Unclipped with soft ambient backdrop */}
-                  {note.imageUrl && (
-                    <div className="relative mb-4 rounded-xl overflow-hidden border border-[#FFE0E6] shadow-xs bg-[#FFF5F7] h-52">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={note.imageUrl.includes("polaroid1.jpg") ? "/images/meghna/Image-30109.jpg" : note.imageUrl}
-                        alt=""
-                        className="absolute inset-0 w-full h-full object-cover blur-xs opacity-25 scale-110 pointer-events-none"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
-                        }}
-                      />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={note.imageUrl.includes("polaroid1.jpg") ? "/images/meghna/Image-30109.jpg" : note.imageUrl}
-                        alt="Memory preview"
-                        className="relative z-10 w-full h-full object-contain p-1 hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
-                        }}
-                      />
-                    </div>
-                  )}
+                  {/* Photo: Unclipped with soft ambient backdrop - Always displayed */}
+                  <div className="relative mb-4 rounded-xl overflow-hidden border border-[#FFE0E6] shadow-xs bg-[#FFF5F7] h-52">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={
+                        note.imageUrl && !note.imageUrl.includes("polaroid1.jpg") && note.imageUrl.trim() !== ""
+                          ? note.imageUrl
+                          : ["/images/meghna/Image-30109.jpg", "/images/meghna/Image-44415.jpg", "/images/meghna/Image-16162.jpg", "/images/meghna/Image-76778.jpg", "/images/meghna/Image-54970.jpg"][idx % 5]
+                      }
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
+                      }}
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={
+                        note.imageUrl && !note.imageUrl.includes("polaroid1.jpg") && note.imageUrl.trim() !== ""
+                          ? note.imageUrl
+                          : ["/images/meghna/Image-30109.jpg", "/images/meghna/Image-44415.jpg", "/images/meghna/Image-16162.jpg", "/images/meghna/Image-76778.jpg", "/images/meghna/Image-54970.jpg"][idx % 5]
+                      }
+                      alt="Memory preview"
+                      className="relative z-10 w-full h-full object-contain p-1 hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Footer of card */}
