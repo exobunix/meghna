@@ -108,12 +108,19 @@ export default function InteractiveHeart() {
               {/* Revealed Heart-Shaped Floating Photo */}
               <div className="relative group">
                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#FF758F] to-[#FFB3C1] rounded-full blur-md opacity-70 animate-pulse pointer-events-none" />
-                <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-white shadow-xl bg-[#FFF0F3]">
+                <div className="relative w-36 h-44 sm:w-44 sm:h-52 rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-[#FFF0F3]">
+                  <Image
+                    src={currentStep.photo}
+                    alt=""
+                    fill
+                    className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                    sizes="180px"
+                  />
                   <Image
                     src={currentStep.photo}
                     alt={currentStep.text}
                     fill
-                    className="object-cover"
+                    className="object-contain p-1 relative z-10"
                     sizes="180px"
                   />
                 </div>

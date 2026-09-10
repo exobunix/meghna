@@ -46,6 +46,12 @@ export default function VideoSection() {
       {/* Centered Reel Frame Container */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-[360px] sm:max-w-[400px] aspect-[9/16] rounded-3xl sm:rounded-[2.5rem] overflow-hidden shadow-2xl border-2 border-[#FFCAD4] bg-black group">
+          {/* Ambient Video Backdrop */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={poster} alt="" className="w-full h-full object-cover blur-md opacity-30 scale-110" />
+          </div>
+
           {/* Ambient Video Element */}
           <video
             ref={videoRef}
@@ -55,7 +61,7 @@ export default function VideoSection() {
             muted={isMuted}
             loop
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain relative z-10"
           />
 
           {/* Subtle Film Grain SVG filter overlay */}

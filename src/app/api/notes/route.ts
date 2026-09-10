@@ -8,7 +8,7 @@ const DEFAULT_NOTES = [
     sender: "Adarsh",
     message: "Meghna, you make every ordinary day feel like a magical movie scene. Thank you for being you! ❤️",
     tag: "Heartfelt",
-    imageUrl: "https://ik.imagekit.io/avdarinn/meghna/polaroid1.jpg",
+    imageUrl: "/images/meghna/Image-30109.jpg",
     createdAt: new Date().toISOString(),
     likes: 14,
   },
@@ -24,7 +24,7 @@ const DEFAULT_NOTES = [
     sender: "Adarsh",
     message: "Tere chehre ki muskaan hi meri duniya hai. Always keep smiling! 🌸",
     tag: "Shayari",
-    imageUrl: "",
+    imageUrl: "/images/meghna/Image-16162.jpg",
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     likes: 28,
   },
@@ -34,6 +34,12 @@ export async function GET() {
   try {
     const db = await getDatabase();
     const collection = db.collection("notes");
+
+    // Automatically update any stale broken polaroid1.jpg references in database
+    await collection.updateMany(
+      { imageUrl: { $regex: "polaroid1\\.jpg" } },
+      { $set: { imageUrl: "/images/meghna/Image-30109.jpg" } }
+    ).catch(() => {});
 
     let notes = await collection.find({}).sort({ createdAt: -1 }).limit(50).toArray();
 
@@ -55,7 +61,12 @@ export async function GET() {
         sender: n.sender,
         message: n.message,
         tag: n.tag || "Love",
-        imageUrl: n.imageUrl || "",
+        imageUrl:
+          n.imageUrl && !n.imageUrl.includes("polaroid1.jpg")
+            ? n.imageUrl
+            : n.sender === "Adarsh"
+            ? "/images/meghna/Image-30109.jpg"
+            : n.imageUrl || "",
         createdAt: n.createdAt,
         likes: n.likes || 0,
       })),

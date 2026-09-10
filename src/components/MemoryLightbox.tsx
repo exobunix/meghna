@@ -76,12 +76,19 @@ export default function MemoryLightbox({ item, onClose, onPrev, onNext }: Lightb
           className="bg-white p-4 sm:p-6 pb-8 rounded-3xl max-w-2xl w-full mx-auto shadow-2xl relative"
         >
           {/* Main Photo */}
-          <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-[#FFF5F7]">
+          <div className="relative aspect-[4/5] sm:aspect-[4/3] w-full rounded-2xl overflow-hidden bg-[#FFF5F7]">
+            <Image
+              src={item.src}
+              alt=""
+              fill
+              className="object-cover blur-sm opacity-25 scale-110 pointer-events-none"
+              sizes="(max-width: 768px) 100vw, 700px"
+            />
             <Image
               src={item.src}
               alt={item.alt}
               fill
-              className="object-cover"
+              className="object-contain p-2 relative z-10"
               sizes="(max-width: 768px) 100vw, 700px"
               priority
             />

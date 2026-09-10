@@ -81,9 +81,16 @@ export default function MusicPlayer({
           <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden shadow-lg flex-shrink-0 bg-[#FFF0F3] border-2 border-[#FFCAD4]/70 group">
             <Image
               src={currentSong.cover}
+              alt=""
+              fill
+              className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+              sizes="160px"
+            />
+            <Image
+              src={currentSong.cover}
               alt={currentSong.title}
               fill
-              className="object-cover"
+              className="object-contain p-1 relative z-10"
               sizes="160px"
             />
 
@@ -193,7 +200,8 @@ export default function MusicPlayer({
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#FFF0F3] flex-shrink-0 border border-[#FFCAD4]/50">
-                  <Image src={song.cover} alt={song.title} fill className="object-cover" sizes="50px" />
+                  <Image src={song.cover} alt="" fill className="object-cover blur-xs opacity-25 scale-110 pointer-events-none" sizes="50px" />
+                  <Image src={song.cover} alt={song.title} fill className="object-contain p-0.5 relative z-10" sizes="50px" />
                 </div>
                 <div className="min-w-0">
                   <h4 className="font-serif-luxury font-bold text-[#3D0C1A] text-base leading-tight truncate">

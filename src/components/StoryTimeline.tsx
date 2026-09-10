@@ -101,12 +101,21 @@ export default function StoryTimeline() {
                     {/* Washi tape accent */}
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-[#FFE5EC]/80 border border-[#FFCAD4]/60 rotate-1 shadow-sm backdrop-blur-xs" />
 
-                    <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#FFF5F7]">
+                    <div className="relative aspect-[4/5] sm:aspect-[3/4] rounded-xl overflow-hidden bg-[#FFF5F7]">
+                      {/* Ambient blur fill */}
+                      <Image
+                        src={item.image}
+                        alt=""
+                        fill
+                        className="object-cover blur-sm opacity-25 scale-110 pointer-events-none"
+                        sizes="(max-width: 768px) 100vw, 400px"
+                      />
+                      {/* Complete uncropped photo */}
                       <Image
                         src={item.image}
                         alt={item.title}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1 relative z-10"
                         sizes="(max-width: 768px) 100vw, 400px"
                       />
                     </div>

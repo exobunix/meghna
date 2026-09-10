@@ -84,14 +84,21 @@ export default function ShayariSection() {
                 <div className="relative w-56 sm:w-64 aspect-[4/5] rounded-3xl overflow-hidden border-4 border-[#FFCAD4] shadow-xl bg-[#FFF0F3] -rotate-1 hover:rotate-0 transition-transform duration-300">
                   <Image
                     src={currentShayari.photo}
+                    alt=""
+                    fill
+                    className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                    sizes="260px"
+                  />
+                  <Image
+                    src={currentShayari.photo}
                     alt="Meghna in shayari"
                     fill
-                    className="object-cover"
+                    className="object-contain p-1 relative z-10"
                     sizes="260px"
                     priority
                   />
                   {/* Floating mood pill */}
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-xs text-[#3D0C1A] text-xs font-semibold shadow-md whitespace-nowrap border border-[#FFCAD4]/60">
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-[#3D0C1A] text-xs font-semibold shadow-md whitespace-nowrap border border-[#FFCAD4]/60 z-20">
                     {currentShayari.mood}
                   </div>
                 </div>

@@ -92,13 +92,20 @@ export default function FinalSurprise() {
             {/* Glowing Heart Locket with Meghna's Real Photo */}
             <div className="relative inline-block mx-auto">
               <div className="absolute -inset-3 rounded-full bg-[#FF758F]/40 blur-xl animate-pulse pointer-events-none" />
-              <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-[#FFCAD4] shadow-[0_0_30px_rgba(255,117,143,0.8)]">
+              <div className="relative w-36 h-44 sm:w-48 sm:h-56 rounded-3xl overflow-hidden border-4 border-[#FFCAD4] shadow-[0_0_30px_rgba(255,117,143,0.8)] bg-black/40">
+                <Image
+                  src={portrait || "/images/meghna/Image-724.jpg"}
+                  alt=""
+                  fill
+                  className="object-cover blur-xs opacity-30 scale-110 pointer-events-none"
+                  sizes="200px"
+                />
                 <Image
                   src={portrait || "/images/meghna/Image-724.jpg"}
                   alt="Meghna portrait"
                   fill
-                  className="object-cover"
-                  sizes="180px"
+                  className="object-contain p-1 relative z-10"
+                  sizes="200px"
                   priority
                 />
               </div>

@@ -240,15 +240,27 @@ export default function LoveNotesWall() {
                     “{note.message}”
                   </p>
 
-                  {/* Optional ImageKit Photo */}
+                  {/* Optional ImageKit Photo: Unclipped with soft ambient backdrop */}
                   {note.imageUrl && (
-                    <div className="mb-4 rounded-xl overflow-hidden border border-[#FFE0E6] shadow-xs">
+                    <div className="relative mb-4 rounded-xl overflow-hidden border border-[#FFE0E6] shadow-xs bg-[#FFF5F7] h-52">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={note.imageUrl}
+                        src={note.imageUrl.includes("polaroid1.jpg") ? "/images/meghna/Image-30109.jpg" : note.imageUrl}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
+                        }}
+                      />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={note.imageUrl.includes("polaroid1.jpg") ? "/images/meghna/Image-30109.jpg" : note.imageUrl}
                         alt="Memory preview"
-                        className="w-full h-44 object-cover hover:scale-105 transition-transform duration-500"
+                        className="relative z-10 w-full h-full object-contain p-1 hover:scale-105 transition-transform duration-300"
                         loading="lazy"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/images/meghna/Image-30109.jpg";
+                        }}
                       />
                     </div>
                   )}
@@ -373,12 +385,18 @@ export default function LoveNotesWall() {
                   />
 
                   {imagePreview ? (
-                    <div className="relative rounded-xl overflow-hidden border border-[#FFD0DB] group">
+                    <div className="relative h-44 rounded-xl overflow-hidden border border-[#FFD0DB] bg-[#FFF5F7] group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={imagePreview}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                      />
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={imagePreview}
                         alt="Selected memory"
-                        className="w-full h-36 object-cover"
+                        className="relative z-10 w-full h-full object-contain p-1"
                       />
                       <button
                         type="button"

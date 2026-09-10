@@ -82,9 +82,16 @@ export default function LoveCards() {
                   <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#FFCAD4] shadow-sm flex-shrink-0 bg-[#FFF0F3]">
                     <Image
                       src={card.image}
+                      alt=""
+                      fill
+                      className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                      sizes="60px"
+                    />
+                    <Image
+                      src={card.image}
                       alt={card.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="object-contain p-0.5 group-hover:scale-110 transition-transform duration-300 relative z-10"
                       sizes="60px"
                     />
                   </div>
@@ -138,12 +145,19 @@ export default function LoveCards() {
               </button>
 
               {/* Meghna's Real Photo in Modal */}
-              <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden mb-4 shadow-md border border-[#FFCAD4]/40 bg-[#FFF0F3]">
+              <div className="relative aspect-[4/5] sm:aspect-[3/4] w-full rounded-2xl overflow-hidden mb-4 shadow-md border border-[#FFCAD4]/40 bg-[#FFF0F3]">
+                <Image
+                  src={selectedCard.image}
+                  alt=""
+                  fill
+                  className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                  sizes="450px"
+                />
                 <Image
                   src={selectedCard.image}
                   alt={selectedCard.title}
                   fill
-                  className="object-cover"
+                  className="object-contain p-1 relative z-10"
                   sizes="(max-width: 640px) 100vw, 450px"
                 />
               </div>

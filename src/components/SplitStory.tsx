@@ -23,16 +23,25 @@ export default function SplitStory() {
           transition={{ duration: 0.9 }}
           className="lg:col-span-7 flex justify-center"
         >
-          <div className="relative w-full max-w-lg aspect-[4/3] rounded-3xl p-3 bg-white polaroid-shadow border border-[#FFCAD4]/60 -rotate-1 hover:rotate-0 transition-transform duration-500">
+          <div className="relative w-full max-w-lg aspect-[4/5] sm:aspect-[3/4] rounded-3xl p-3 bg-white polaroid-shadow border border-[#FFCAD4]/60 -rotate-1 hover:rotate-0 transition-transform duration-500">
             {/* Washi tape accent */}
             <div className="absolute -top-3 left-10 w-28 h-7 bg-[#FFCAD4]/60 border border-[#FFCAD4] rounded-sm -rotate-3 shadow-xs pointer-events-none z-10" />
 
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#FFF5F7]">
+              {/* Ambient blur fill */}
+              <Image
+                src={image || "/images/meghna/Image-724.jpg"}
+                alt=""
+                fill
+                className="object-cover blur-xs opacity-25 scale-110 pointer-events-none"
+                sizes="(max-width: 1024px) 100vw, 600px"
+              />
+              {/* Unclipped full image */}
               <Image
                 src={image || "/images/meghna/Image-724.jpg"}
                 alt="Meghna quiet moments"
                 fill
-                className="object-cover"
+                className="object-contain p-1 relative z-10"
                 sizes="(max-width: 1024px) 100vw, 600px"
               />
             </div>
