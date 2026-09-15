@@ -8,9 +8,9 @@ let imagekitInstance: ImageKit | null = null;
 
 export function getImageKit(): ImageKit {
   if (!imagekitInstance) {
-    const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || DEFAULT_PUBLIC_KEY;
+    const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || process.env.IMAGEKIT_PUBLIC_KEY || DEFAULT_PUBLIC_KEY;
     const privateKey = process.env.IMAGEKIT_PRIVATE_KEY || DEFAULT_PRIVATE_KEY;
-    const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT;
+    const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || process.env.IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT;
 
     imagekitInstance = new ImageKit({
       publicKey,
@@ -38,7 +38,7 @@ export function buildImageUrl(path: string, options?: { width?: number; height?:
     return path;
   }
 
-  const endpoint = (process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT).replace(/\/$/, "");
+  const endpoint = (process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || process.env.IMAGEKIT_URL_ENDPOINT || DEFAULT_URL_ENDPOINT).replace(/\/$/, "");
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
 
   const tr: string[] = [];

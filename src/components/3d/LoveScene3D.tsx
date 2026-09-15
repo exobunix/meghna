@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Heart, Moon, Star } from "lucide-react";
 import { sounds } from "@/utils/sound";
+import DreamyScratchCard from "@/components/DreamyScratchCard";
 
 interface StarWishBubble {
   id: number;
@@ -38,6 +39,7 @@ export default function LoveScene3D() {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [wishes, setWishes] = useState<StarWishBubble[]>([]);
   const [activeWordIdx, setActiveWordIdx] = useState(0);
+  const [desktopMode, setDesktopMode] = useState<"3d" | "scratch">("3d");
 
   const spawnWishBubble = (x: number, y: number, isHeartHit: boolean) => {
     const wordList = isHeartHit ? HEART_TAP_WORDS : SKY_WISH_WORDS;
@@ -59,6 +61,10 @@ export default function LoveScene3D() {
   };
 
   useEffect(() => {
+    // Only run 3D scene on desktop when in 3D mode
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
+    if (desktopMode !== "3d") return;
+
     const container = mountRef.current;
     if (!container) return;
 
@@ -73,7 +79,7 @@ export default function LoveScene3D() {
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.domElement.style.touchAction = "none";
+    renderer.domElement.style.touchAction = "pan-y";
     renderer.domElement.style.cursor = "pointer";
     container.appendChild(renderer.domElement);
 
@@ -448,8 +454,8 @@ export default function LoveScene3D() {
       renderer.domElement.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("resize", onResize);
       cancelAnimationFrame(animId);
-      if (container && renderer.domElement && container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      if (renderer.domElement && renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
       heartGeo.dispose();
       floatingHearts.forEach((h) => h.material.dispose());
@@ -464,66 +470,103 @@ export default function LoveScene3D() {
       shootingStarMat.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [desktopMode]);
 
   return (
-    <div className="relative w-full h-[460px] sm:h-[520px] md:h-[580px] rounded-3xl overflow-hidden glass-card my-12 border border-[#FFCAD4]/40 shadow-xl select-none group">
-      {/* 3D Canvas Mount */}
-      <div
-        ref={mountRef}
-        className="w-full h-full cursor-pointer touch-none"
-        aria-label="Interactive 3D Dream Love Scene - Tap the floating hearts"
-      />
-
-      {/* Bursting sweet wish bubbles on heart tap */}
-      <AnimatePresence>
-        {wishes.map((w) => (
-          <motion.div
-            key={w.id}
-            initial={{ opacity: 0, scale: 0.5, x: w.x, y: w.y }}
-            animate={{
-              opacity: [0, 1, 1, 0],
-              scale: [0.6, 1.25, 1.05],
-              y: w.y - 95,
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.8, ease: "easeOut" }}
-            className={`absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-full shadow-lg backdrop-blur-md flex items-center gap-2 border ${
-              w.isHeartHit
-                ? "bg-gradient-to-r from-[#FF4D6D] via-[#FF758F] to-[#E25875] text-white border-white/60 shadow-[#FF758F]/40 scale-105"
-                : "bg-white/95 text-[#3D0C1A] border-[#FFCAD4] shadow-md"
-            }`}
-          >
-            {w.isHeartHit ? (
-              <Heart className="w-4 h-4 text-white fill-white animate-bounce" />
-            ) : (
-              <Sparkles className="w-4 h-4 text-[#FF758F]" />
-            )}
-            <span className="font-handwriting text-base sm:text-xl font-bold">
-              {w.word}
-            </span>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-
-      {/* Floating Section Title Overlay */}
-      <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 md:left-10 md:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between pointer-events-none z-10">
-        <div>
-          <span className="font-handwriting text-lg sm:text-xl md:text-2xl text-[#E25875] font-semibold flex items-center gap-1.5">
-            <Moon className="w-4 h-4 text-[#FFB703] inline fill-[#FFD166]/40" />
-            a dreamy little corner
-          </span>
-          <h3 className="font-playfair-luxury text-2xl sm:text-3xl font-bold text-[#3D0C1A]">
-            Floating in Our Universe ✨
-          </h3>
-        </div>
-        <div className="mt-2 sm:mt-0 flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-[#FFCAD4] shadow-sm">
-          <Heart className="w-4 h-4 text-[#E25875] fill-[#FF758F] animate-pulse" />
-          <p className="text-xs sm:text-sm text-[#8A4F60] font-semibold">
-            Tap any floating heart! 💖
-          </p>
-        </div>
+    <section className="relative my-8 sm:my-12">
+      {/* Mobile View: Dedicated Scratch Cute Loving Heart Card with smooth scrolling touch */}
+      <div className="block md:hidden">
+        <DreamyScratchCard />
       </div>
-    </div>
+
+      {/* Desktop View: Interactive 3D Dream Scene with option to switch to Scratch Card */}
+      <div className="hidden md:block">
+        {desktopMode === "scratch" ? (
+          <div>
+            <div className="flex justify-end mb-3">
+              <button
+                onClick={() => setDesktopMode("3d")}
+                className="px-4 py-1.5 rounded-full bg-white/90 border border-[#FFCAD4] text-xs font-semibold text-[#8A4F60] shadow-sm hover:bg-[#FFF0F3] flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105 active:scale-95"
+              >
+                <Moon className="w-3.5 h-3.5 text-[#FFB703]" />
+                <span>Return to 3D Universe 🌙</span>
+              </button>
+            </div>
+            <DreamyScratchCard />
+          </div>
+        ) : (
+          <div className="relative w-full h-[520px] md:h-[580px] rounded-3xl overflow-hidden glass-card border border-[#FFCAD4]/40 shadow-xl select-none group">
+            {/* Desktop Mode Toggle Button */}
+            <div className="absolute top-4 right-4 z-20">
+              <button
+                onClick={() => setDesktopMode("scratch")}
+                className="px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#FFCAD4] text-xs font-semibold text-[#E25875] shadow-sm hover:bg-[#FFF0F3] flex items-center gap-1.5 cursor-pointer transition-all hover:scale-105 active:scale-95"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#FF758F]" />
+                <span>Scratch Love Card 💖</span>
+              </button>
+            </div>
+
+            {/* 3D Canvas Mount */}
+            <div
+              ref={mountRef}
+              className="w-full h-full cursor-pointer"
+              style={{ touchAction: "pan-y" }}
+              aria-label="Interactive 3D Dream Love Scene - Tap the floating hearts"
+            />
+
+            {/* Bursting sweet wish bubbles on heart tap */}
+            <AnimatePresence>
+              {wishes.map((w) => (
+                <motion.div
+                  key={w.id}
+                  initial={{ opacity: 0, scale: 0.5, x: w.x, y: w.y }}
+                  animate={{
+                    opacity: [0, 1, 1, 0],
+                    scale: [0.6, 1.25, 1.05],
+                    y: w.y - 95,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.8, ease: "easeOut" }}
+                  className={`absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-full shadow-lg backdrop-blur-md flex items-center gap-2 border ${
+                    w.isHeartHit
+                      ? "bg-gradient-to-r from-[#FF4D6D] via-[#FF758F] to-[#E25875] text-white border-white/60 shadow-[#FF758F]/40 scale-105"
+                      : "bg-white/95 text-[#3D0C1A] border-[#FFCAD4] shadow-md"
+                  }`}
+                >
+                  {w.isHeartHit ? (
+                    <Heart className="w-4 h-4 text-white fill-white animate-bounce" />
+                  ) : (
+                    <Sparkles className="w-4 h-4 text-[#FF758F]" />
+                  )}
+                  <span className="font-handwriting text-base sm:text-xl font-bold">
+                    {w.word}
+                  </span>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            {/* Floating Section Title Overlay */}
+            <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 md:left-10 md:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between pointer-events-none z-10">
+              <div>
+                <span className="font-handwriting text-lg sm:text-xl md:text-2xl text-[#E25875] font-semibold flex items-center gap-1.5">
+                  <Moon className="w-4 h-4 text-[#FFB703] inline fill-[#FFD166]/40" />
+                  a dreamy little corner
+                </span>
+                <h3 className="font-playfair-luxury text-2xl sm:text-3xl font-bold text-[#3D0C1A]">
+                  Floating in Our Universe ✨
+                </h3>
+              </div>
+              <div className="mt-2 sm:mt-0 flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border border-[#FFCAD4] shadow-sm">
+                <Heart className="w-4 h-4 text-[#E25875] fill-[#FF758F] animate-pulse" />
+                <p className="text-xs sm:text-sm text-[#8A4F60] font-semibold">
+                  Tap any floating heart! 💖
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
